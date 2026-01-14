@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bongo Rhythm Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Connection Screen -->
+        <div id="connection-screen" class="screen">
+            <h1>BONGO</h1>
+            <div class="status-container">
+                <p id="connection-status">Waiting for controller...</p>
+                <div class="input-group">
+                    <input type="text" id="ws-url" placeholder="ws://192.168.1.x:8080" value="ws://localhost:8080">
+                    <button id="connect-btn">Connect</button>
+                    <button id="debug-btn">Debug Mode</button>
+                </div>
+            </div>
+            <div class="instructions">
+                <p>1. Open BongoController on your iPhone</p>
+                <p>2. Enter the IP address shown on your phone</p>
+                <p>3. Tap Connect</p>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen hidden">
+            <div class="game-header">
+                <div class="score-box">
+                    <span class="label">SCORE</span>
+                    <span id="score-value">0</span>
+                </div>
+                <div class="song-info">
+                    <h2 id="song-title">Song Title</h2>
+                    <div class="combo-box">
+                        <span id="combo-value">0</span> COMBO
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-container">
+                <div class="lane left-lane" id="lane-left">
+                    <div class="hit-zone"></div>
+                    <div class="bongo-indicator">
+                        <img src="assets/bongo-drum.png" alt="Left Bongo">
+                    </div>
+                    <div class="key-hint">LEFT</div>
+                    <div class="feedback-container" id="feedback-left"></div>
+                </div>
+                
+                <div class="lane right-lane" id="lane-right">
+                    <div class="hit-zone"></div>
+                    <div class="bongo-indicator">
+                        <img src="assets/bongo-drum.png" alt="Right Bongo">
+                    </div>
+                    <div class="key-hint">RIGHT</div>
+                    <div class="feedback-container" id="feedback-right"></div>
+                </div>
+
+                <!-- Notes will be injected here dynamically -->
+                <div id="notes-container"></div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen hidden">
+            <h1>SONG COMPLETE</h1>
+            <div class="final-score-container">
+                <div class="final-score-label">FINAL SCORE</div>
+                <div id="final-score">0</div>
+            </div>
+            <button id="restart-btn">Play Again</button>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>

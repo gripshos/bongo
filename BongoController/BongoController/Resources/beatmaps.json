@@ -1,0 +1,17 @@
+[
+  {
+    "songId": "123456789", 
+    "songTitle": "Demo Song",
+    "bpm": 120,
+    "notes": [
+      { "time": 2.0, "side": "left" },
+      { "time": 2.5, "side": "right" },
+      { "time": 3.0, "side": "left" },
+      { "time": 3.5, "side": "right" },
+      { "time": 4.0, "side": "left" },
+      { "time": 4.5, "side": "right" },
+      { "time": 5.0, "side": "left" },
+      { "time": 5.0, "side": "right" }
+    ]
+  }
+]
