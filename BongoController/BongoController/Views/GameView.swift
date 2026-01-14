@@ -106,12 +106,19 @@ struct GameView: View {
     
     func loadBeatMap() -> BeatMap? {
         // Load from bundle
-        guard let url = Bundle.main.url(forResource: "beatmaps", withExtension: "json"),
-              let data = try? Data(contentsOf: url),
-              let maps = try? JSONDecoder().decode([BeatMap].self, from: data) else {
-            return nil
+        guard let url = Bundle.main.url(forResource: "beatmaps", withExtension: "json") else {
+             print("Error: beatmaps.json not found in Bundle")
+             return nil
         }
-        return maps.first // For MVP just verify first
+        
+        do {
+            let data = try Data(contentsOf: url)
+            let maps = try JSONDecoder().decode([BeatMap].self, from: data)
+            return maps.first
+        } catch {
+             print("Error decoding beatmaps.json: \(error)")
+             return nil
+        }
     }
 }
 

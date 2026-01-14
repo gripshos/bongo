@@ -89,7 +89,7 @@ struct ContentView: View {
                     .padding(.horizontal)
                     
                     if wsManager.clientConnected && musicService.currentSong != nil {
-                        Button(action: startGame) {
+                        Button(action: { startGame() }) {
                             Text("START GAME")
                                 .font(.title3)
                                 .fontWeight(.bold)
@@ -119,18 +119,36 @@ struct ContentView: View {
         .onAppear {
             wsManager.start()
         }
+        .onChange(of: wsManager.shouldStartGame) { shouldStart in
+            if shouldStart {
+                startGame(isRemoteDebug: true)
+                wsManager.shouldStartGame = false
+            }
+        }
     }
     
-    func startGame() {
+    func startGame(isRemoteDebug: Bool = false) {
+        if isRemoteDebug {
+            withAnimation {
+                showingGame = true
+            }
+            return
+        }
+        
         guard let song = musicService.currentSong else { return }
+        
+        // Optimistic transition: Go to game screen immediately
+        withAnimation {
+            showingGame = true
+        }
+        
         Task {
             do {
                 try await musicService.play(song: song)
-                withAnimation {
-                    showingGame = true
-                }
             } catch {
                 print("Error playing song: \(error)")
+                // Optionally handle error (e.g. show alert in GameView), 
+                // but for now keeping us in GameView checks connection at least.
             }
         }
     }

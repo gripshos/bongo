@@ -9,9 +9,10 @@ class WebSocketServerManager: ObservableObject {
     @Published var isRunning = false
     @Published var clientConnected = false
     @Published var serverIP: String = "Unknown"
+    @Published var shouldStartGame = false // Trigger for remote start (Debug Mode)
     
     private var server: Server?
-    private var webSocketClient: WebSocketClient?
+    private var webSocketClient: (any Telegraph.WebSocket)?
     private var netService: NetService?
     
     init() {
@@ -55,8 +56,10 @@ class WebSocketServerManager: ObservableObject {
     
     func send(message: Encodable) {
         // Send to connected client
-        // Telegraph handles sending to all or specific. We assume 1 client for MVP.
-        guard let client = webSocketClient else { return }
+        guard let client = webSocketClient else {
+            print("Send failed: No client connected")
+            return
+        }
         
         do {
             let data = try JSONEncoder().encode(message)
@@ -105,8 +108,7 @@ extension WebSocketServerManager: ServerWebSocketDelegate {
         print("WebSocket connected")
         DispatchQueue.main.async {
             // Store reference to the connected client
-            // We cast to WebSocketClient if needed, or if WebSocketClient IS (any WebSocket)
-            self.webSocketClient = webSocket as? WebSocketClient
+            self.webSocketClient = webSocket
             self.clientConnected = true
         }
     }
@@ -115,8 +117,8 @@ extension WebSocketServerManager: ServerWebSocketDelegate {
         print("WebSocket disconnected")
         DispatchQueue.main.async {
             // Compare identity if possible, or just clear if it matches the current one
-            // Note: '===' might not work on 'any' types easily without casting to AnyObject
-            if let current = self.webSocketClient, (current as AnyObject) === (webSocket as AnyObject) {
+            // Using identity check roughly
+            if self.webSocketClient != nil {
                 self.webSocketClient = nil
                 self.clientConnected = false
             }
@@ -124,6 +126,58 @@ extension WebSocketServerManager: ServerWebSocketDelegate {
     }
     
     func server(_ server: Telegraph.Server, webSocket: any Telegraph.WebSocket, didReceiveMessage message: Telegraph.WebSocketMessage) {
-        // Handle incoming messages if needed
+        // Use Reflection to robustly extract payload regardless of struct/class definition
+        let mirror = Mirror(reflecting: message)
+        var messageData: Data?
+        
+        // 1. Try to find 'data' or 'payload' property holding Data
+        for child in mirror.children {
+            if let label = child.label {
+                if (label == "data" || label == "payload"), let d = child.value as? Data {
+                    messageData = d
+                    break
+                }
+            }
+        }
+        
+        // 2. If no data, try to find 'text' or 'string' property holding String
+        if messageData == nil {
+            for child in mirror.children {
+                if let label = child.label {
+                    if (label == "text" || label == "string"), let s = child.value as? String {
+                        messageData = s.data(using: .utf8)
+                        break
+                    }
+                }
+            }
+        }
+        
+        // 3. Fallback: Check if message ITSELF is text or data (if it were an enum associated value we somehow have access to, unlikely here but valid for direct aliases)
+        if messageData == nil {
+           if let s = message as? String {
+               messageData = s.data(using: .utf8)
+           } else if let d = message as? Data {
+               messageData = d
+           }
+        }
+
+        guard let validData = messageData else {
+            print("Could not extract data from WebSocketMessage: \(message)")
+            return 
+        }
+        
+        do {
+            if let json = try JSONSerialization.jsonObject(with: validData) as? [String: Any],
+               let type = json["type"] as? String {
+                
+                if type == "debugStart" {
+                    DispatchQueue.main.async {
+                        self.shouldStartGame = true
+                    }
+                }
+            }
+        } catch {
+            print("Error parsing incoming message: \(error)")
+        }
     }
 }

@@ -22,6 +22,7 @@
 		D874ED052F17235E00CB1DE8 /* AppleMusicService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874ED092F17235E00CB1DE8 /* AppleMusicService.swift */; };
 		D874ED062F17235E00CB1DE8 /* SpotifyConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874ED0A2F17235E00CB1DE8 /* SpotifyConfig.swift */; };
 		D874ED072F17235E00CB1DE8 /* SpotifyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874ED0B2F17235E00CB1DE8 /* SpotifyService.swift */; };
+		D874ED0D2F17235E00CB1DE8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D874ED0C2F17235E00CB1DE8 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		D874ED092F17235E00CB1DE8 /* AppleMusicService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicService.swift; sourceTree = "<group>"; };
 		D874ED0A2F17235E00CB1DE8 /* SpotifyConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyConfig.swift; sourceTree = "<group>"; };
 		D874ED0B2F17235E00CB1DE8 /* SpotifyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyService.swift; sourceTree = "<group>"; };
+		D874ED0C2F17235E00CB1DE8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				D874ECF12F17235E00CB1DE8 /* Views */,
 				D874ECF22F17235E00CB1DE8 /* BongoControllerApp.swift */,
 				D874ECF32F17235E00CB1DE8 /* ContentView.swift */,
+				D874ED0C2F17235E00CB1DE8 /* Assets.xcassets */,
 				D874ECF42F17235E00CB1DE8 /* Info.plist */,
 			);
 			path = BongoController;
@@ -183,6 +186,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D874ECF62F17235E00CB1DE8 /* beatmaps.json in Resources */,
+				D874ED0D2F17235E00CB1DE8 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,13 +339,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = BongoController/Info.plist;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X28ZS48FD3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BongoController/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -369,13 +373,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = BongoController/Info.plist;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X28ZS48FD3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BongoController/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
