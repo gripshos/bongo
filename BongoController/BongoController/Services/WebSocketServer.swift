@@ -12,6 +12,7 @@ class WebSocketServerManager: ObservableObject {
     
     private var server: Server?
     private var webSocketClient: WebSocketClient?
+    private var netService: NetService?
     
     init() {
         setupServer()
@@ -27,7 +28,14 @@ class WebSocketServerManager: ObservableObject {
             // Get local IP
             if let ip = getWiFiAddress() {
                 self.serverIP = ip
-                try server?.start(port: 8080, interface: "0.0.0.0") // Bind to all interfaces
+                
+                // Publish Bonjour Service (Before start to ensure prompt is triggered even if start fails momentarily)
+                self.netService = NetService(domain: "local.", type: "_http._tcp.", name: "BongoController", port: 8080)
+                self.netService?.publish()
+                
+                // Bind to specific IP to avoid "Unknown interface" error
+                try server?.start(port: 8080, interface: ip)
+                
                 self.isRunning = true
                 print("Server started on ws://\(ip):8080")
             } else {
@@ -41,6 +49,7 @@ class WebSocketServerManager: ObservableObject {
     
     func stop() {
         server?.stop()
+        netService?.stop()
         self.isRunning = false
     }
     

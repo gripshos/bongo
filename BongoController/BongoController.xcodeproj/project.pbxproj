@@ -18,10 +18,13 @@
 		D874ECFF2F17235E00CB1DE8 /* WebSocketServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874ECEC2F17235E00CB1DE8 /* WebSocketServer.swift */; };
 		D874ED002F17235E00CB1DE8 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874ECEE2F17235E00CB1DE8 /* GameView.swift */; };
 		D874ED032F1724D500CB1DE8 /* Telegraph in Frameworks */ = {isa = PBXBuildFile; productRef = D874ED022F1724D500CB1DE8 /* Telegraph */; };
+		D874ED042F17235E00CB1DE8 /* MusicProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874ED082F17235E00CB1DE8 /* MusicProvider.swift */; };
+		D874ED052F17235E00CB1DE8 /* AppleMusicService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874ED092F17235E00CB1DE8 /* AppleMusicService.swift */; };
+		D874ED062F17235E00CB1DE8 /* SpotifyConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874ED0A2F17235E00CB1DE8 /* SpotifyConfig.swift */; };
+		D874ED072F17235E00CB1DE8 /* SpotifyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874ED0B2F17235E00CB1DE8 /* SpotifyService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D874EC712F17210500CB1DE8 /* BongoController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = BongoController.app; path = "/Users/stevengripshover/Documents/Development/bongo/BongoController/build/Debug-iphoneos/BongoController.app"; sourceTree = "<absolute>"; };
 		D874ECE62F17235E00CB1DE8 /* BeatMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatMap.swift; sourceTree = "<group>"; };
 		D874ECE72F17235E00CB1DE8 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		D874ECE92F17235E00CB1DE8 /* beatmaps.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = beatmaps.json; sourceTree = "<group>"; };
@@ -33,6 +36,11 @@
 		D874ECF22F17235E00CB1DE8 /* BongoControllerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BongoControllerApp.swift; sourceTree = "<group>"; };
 		D874ECF32F17235E00CB1DE8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D874ECF42F17235E00CB1DE8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D874ED042F173C4E00CB1DE8 /* BongoController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BongoController.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D874ED082F17235E00CB1DE8 /* MusicProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicProvider.swift; sourceTree = "<group>"; };
+		D874ED092F17235E00CB1DE8 /* AppleMusicService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicService.swift; sourceTree = "<group>"; };
+		D874ED0A2F17235E00CB1DE8 /* SpotifyConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyConfig.swift; sourceTree = "<group>"; };
+		D874ED0B2F17235E00CB1DE8 /* SpotifyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				D874ECF52F17235E00CB1DE8 /* BongoController */,
+				D874ED042F173C4E00CB1DE8 /* BongoController.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -75,6 +84,10 @@
 			isa = PBXGroup;
 			children = (
 				D874ECEB2F17235E00CB1DE8 /* MusicService.swift */,
+				D874ED092F17235E00CB1DE8 /* AppleMusicService.swift */,
+				D874ED082F17235E00CB1DE8 /* MusicProvider.swift */,
+				D874ED0A2F17235E00CB1DE8 /* SpotifyConfig.swift */,
+				D874ED0B2F17235E00CB1DE8 /* SpotifyService.swift */,
 				D874ECEC2F17235E00CB1DE8 /* WebSocketServer.swift */,
 			);
 			path = Services;
@@ -124,7 +137,7 @@
 				D874ED022F1724D500CB1DE8 /* Telegraph */,
 			);
 			productName = BongoController;
-			productReference = D874EC712F17210500CB1DE8 /* BongoController.app */;
+			productReference = D874ED042F173C4E00CB1DE8 /* BongoController.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -188,6 +201,10 @@
 				D874ECFD2F17235E00CB1DE8 /* BongoControllerApp.swift in Sources */,
 				D874ECFE2F17235E00CB1DE8 /* ContentView.swift in Sources */,
 				D874ECFF2F17235E00CB1DE8 /* WebSocketServer.swift in Sources */,
+				D874ED042F17235E00CB1DE8 /* MusicProvider.swift in Sources */,
+				D874ED052F17235E00CB1DE8 /* AppleMusicService.swift in Sources */,
+				D874ED062F17235E00CB1DE8 /* SpotifyConfig.swift in Sources */,
+				D874ED072F17235E00CB1DE8 /* SpotifyService.swift in Sources */,
 				D874ED002F17235E00CB1DE8 /* GameView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -318,9 +335,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = BongoController/Info.plist;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X28ZS48FD3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -328,6 +347,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -349,9 +369,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = BongoController/Info.plist;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X28ZS48FD3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -359,6 +381,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

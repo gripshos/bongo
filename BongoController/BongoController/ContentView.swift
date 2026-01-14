@@ -26,6 +26,29 @@ struct ContentView: View {
                             .tracking(5)
                     }
                     
+                    // Provider Selection
+                    Picker("Music Provider", selection: $musicService.providerType) {
+                        ForEach(MusicProviderType.allCases) { type in
+                            Text(type.rawValue).tag(type)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal)
+                    .onChange(of: musicService.providerType) {
+                        // Reset selection on change
+                        musicService.currentSong = nil
+                    }
+                    
+                    if !musicService.isAuthorized {
+                        Button("Authorize \(musicService.providerType.rawValue)") {
+                            Task {
+                                await musicService.authorize()
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+
+                    
                     // Connection Status
                     VStack(alignment: .leading, spacing: 10) {
                         Text("CONNECTION STATUS")
@@ -58,10 +81,11 @@ struct ContentView: View {
                             Image(systemName: "chevron.right")
                         }
                         .padding()
-                        .background(Color.blue)
+                        .background(musicService.isAuthorized ? Color.blue : Color.gray)
                         .foregroundColor(.white)
                         .cornerRadius(12)
                     }
+                    .disabled(!musicService.isAuthorized)
                     .padding(.horizontal)
                     
                     if wsManager.clientConnected && musicService.currentSong != nil {
@@ -90,6 +114,7 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showSongPicker) {
             SongPickerView(selectedSong: $musicService.currentSong)
+                .environmentObject(musicService)
         }
         .onAppear {
             wsManager.start()

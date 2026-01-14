@@ -1,10 +1,11 @@
 import SwiftUI
-import MusicKit
 
 struct SongPickerView: View {
-    @Binding var selectedSong: Song?
+    @Binding var selectedSong: BongoSong?
     @Environment(\.dismiss) var dismiss
-    @State private var songs: MusicItemCollection<Song> = []
+    @EnvironmentObject var musicService: MusicService
+    @State private var songs: [BongoSong] = []
+    @State private var searchText = ""
     
     var body: some View {
         NavigationView {
@@ -14,34 +15,35 @@ struct SongPickerView: View {
                     dismiss()
                 }) {
                     HStack {
-                        AsyncImage(url: song.artwork?.url(width: 50, height: 50))
-                            .frame(width: 50, height: 50)
-                            .cornerRadius(5)
+                        AsyncImage(url: song.artworkURL) { image in
+                            image.resizable()
+                        } placeholder: {
+                            Color.gray
+                        }
+                        .frame(width: 50, height: 50)
+                        .cornerRadius(5)
+                        
                         VStack(alignment: .leading) {
                             Text(song.title)
                                 .font(.headline)
-                            Text(song.artistName)
+                            Text(song.artist)
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
                     }
                 }
             }
+            .searchable(text: $searchText)
+            .onChange(of: searchText) {
+                Task {
+                    self.songs = await musicService.search(query: searchText)
+                }
+            }
             .navigationTitle("Select Music")
             .task {
-                await loadLibrarySongs()
+               // Load initial
+               self.songs = await musicService.search(query: "")
             }
-        }
-    }
-    
-    func loadLibrarySongs() async {
-        do {
-            // Just load recently added for MVP simple access
-            let request = MusicLibraryRequest<Song>()
-            let response = try await request.response()
-            self.songs = response.items
-        } catch {
-            print("Failed to load songs: \(error)")
         }
     }
 }

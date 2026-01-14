@@ -2,8 +2,6 @@
 
 **Bongo** is a dual-screen rhythm game that turns your iPhone into a motion controller and your web browser into the main game display. 
 
-![Bongo Game Concept](https://via.placeholder.com/800x400?text=Bongo+Game+Concept)
-
 ## Overview
 
 - **Controller (iOS)**: Your iPhone detects taps (left/right) and handles music playback via Apple Music (MusicKit). It hosts a local WebSocket server to communicate with the display.
