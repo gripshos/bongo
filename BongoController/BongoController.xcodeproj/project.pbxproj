@@ -23,6 +23,8 @@
 		D874ED062F17235E00CB1DE8 /* SpotifyConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874ED0A2F17235E00CB1DE8 /* SpotifyConfig.swift */; };
 		D874ED072F17235E00CB1DE8 /* SpotifyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874ED0B2F17235E00CB1DE8 /* SpotifyService.swift */; };
 		D874ED0D2F17235E00CB1DE8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D874ED0C2F17235E00CB1DE8 /* Assets.xcassets */; };
+		D874ED0E2F17235E00CB1DE8 /* BPMConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874ED0F2F17235E00CB1DE8 /* BPMConfigView.swift */; };
+		D874ED102F17235E00CB1DE8 /* BeatMapGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874ED112F17235E00CB1DE8 /* BeatMapGenerator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,8 @@
 		D874ED0A2F17235E00CB1DE8 /* SpotifyConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyConfig.swift; sourceTree = "<group>"; };
 		D874ED0B2F17235E00CB1DE8 /* SpotifyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyService.swift; sourceTree = "<group>"; };
 		D874ED0C2F17235E00CB1DE8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D874ED0F2F17235E00CB1DE8 /* BPMConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPMConfigView.swift; sourceTree = "<group>"; };
+		D874ED112F17235E00CB1DE8 /* BeatMapGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatMapGenerator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +95,7 @@
 				D874ED0A2F17235E00CB1DE8 /* SpotifyConfig.swift */,
 				D874ED0B2F17235E00CB1DE8 /* SpotifyService.swift */,
 				D874ECEC2F17235E00CB1DE8 /* WebSocketServer.swift */,
+				D874ED112F17235E00CB1DE8 /* BeatMapGenerator.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -101,6 +106,7 @@
 				D874ECEE2F17235E00CB1DE8 /* GameView.swift */,
 				D874ECEF2F17235E00CB1DE8 /* SongPickerView.swift */,
 				D874ECF02F17235E00CB1DE8 /* TapZoneView.swift */,
+				D874ED0F2F17235E00CB1DE8 /* BPMConfigView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -210,6 +216,8 @@
 				D874ED062F17235E00CB1DE8 /* SpotifyConfig.swift in Sources */,
 				D874ED072F17235E00CB1DE8 /* SpotifyService.swift in Sources */,
 				D874ED002F17235E00CB1DE8 /* GameView.swift in Sources */,
+				D874ED0E2F17235E00CB1DE8 /* BPMConfigView.swift in Sources */,
+				D874ED102F17235E00CB1DE8 /* BeatMapGenerator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

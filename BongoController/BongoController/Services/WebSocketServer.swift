@@ -10,6 +10,7 @@ class WebSocketServerManager: ObservableObject {
     @Published var clientConnected = false
     @Published var serverIP: String = "Unknown"
     @Published var shouldStartGame = false // Trigger for remote start (Debug Mode)
+    @Published var shouldEndGame = false // Trigger for remote end game request
     
     private var server: Server?
     private var webSocketClient: (any Telegraph.WebSocket)?
@@ -152,15 +153,6 @@ extension WebSocketServerManager: ServerWebSocketDelegate {
             }
         }
         
-        // 3. Fallback: Check if message ITSELF is text or data (if it were an enum associated value we somehow have access to, unlikely here but valid for direct aliases)
-        if messageData == nil {
-           if let s = message as? String {
-               messageData = s.data(using: .utf8)
-           } else if let d = message as? Data {
-               messageData = d
-           }
-        }
-
         guard let validData = messageData else {
             print("Could not extract data from WebSocketMessage: \(message)")
             return 
@@ -169,10 +161,17 @@ extension WebSocketServerManager: ServerWebSocketDelegate {
         do {
             if let json = try JSONSerialization.jsonObject(with: validData) as? [String: Any],
                let type = json["type"] as? String {
-                
+
                 if type == "debugStart" {
                     DispatchQueue.main.async {
                         self.shouldStartGame = true
+                    }
+                }
+
+                // Handle end game request from web display
+                if type == "endGameRequest" {
+                    DispatchQueue.main.async {
+                        self.shouldEndGame = true
                     }
                 }
             }

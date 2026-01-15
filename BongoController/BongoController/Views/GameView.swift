@@ -5,7 +5,9 @@ import Combine
 struct GameView: View {
     @ObservedObject var musicService: MusicService
     @ObservedObject var wsManager: WebSocketServerManager
-    
+    var bpm: Double = 120
+    var difficulty: GameDifficulty = .medium
+
     @State private var score = 0
     @State private var combo = 0
     @State private var timer: Timer?
@@ -59,20 +61,29 @@ struct GameView: View {
     }
     
     func startGame() {
-        // Prepare beatmap
-        if let data = loadBeatMap() {
-            self.beatMap = data
-            
-            // Send GameStart
-            let startMsg = GameStartMessage(
-                type: "gameStart",
-                songTitle: musicService.currentSong?.title ?? "Unknown",
-                bpm: data.bpm,
-                beatMap: data.notes
-            )
-            wsManager.send(message: startMsg)
-        }
-        
+        // Generate beatmap dynamically based on song and settings
+        let song = musicService.currentSong
+        let songDuration = song?.duration ?? 60.0
+
+        let generatedMap = BeatMapGenerator.generate(
+            songId: song?.id ?? "unknown",
+            songTitle: song?.title ?? "Unknown",
+            bpm: bpm,
+            duration: songDuration,
+            difficulty: difficulty
+        )
+        self.beatMap = generatedMap
+
+        // Send GameStart with song duration for progress bar
+        let startMsg = GameStartMessage(
+            type: "gameStart",
+            songTitle: generatedMap.songTitle,
+            bpm: generatedMap.bpm,
+            beatMap: generatedMap.notes,
+            songDuration: songDuration
+        )
+        wsManager.send(message: startMsg)
+
         // Start Sync Timer
         timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
             sendSync()
@@ -103,23 +114,6 @@ struct GameView: View {
         wsManager.send(message: GameEndMessage(type: "gameEnd", finalScore: score))
         // Dismiss view logic handled by parent state usually
     }
-    
-    func loadBeatMap() -> BeatMap? {
-        // Load from bundle
-        guard let url = Bundle.main.url(forResource: "beatmaps", withExtension: "json") else {
-             print("Error: beatmaps.json not found in Bundle")
-             return nil
-        }
-        
-        do {
-            let data = try Data(contentsOf: url)
-            let maps = try JSONDecoder().decode([BeatMap].self, from: data)
-            return maps.first
-        } catch {
-             print("Error decoding beatmaps.json: \(error)")
-             return nil
-        }
-    }
 }
 
 // Protocol structs for JSON
@@ -128,6 +122,7 @@ struct GameStartMessage: Codable {
     let songTitle: String
     let bpm: Double
     let beatMap: [BeatMap.Note]
+    let songDuration: Double
 }
 
 struct SyncMessage: Codable {

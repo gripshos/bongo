@@ -7,13 +7,16 @@ struct ContentView: View {
     
     @State private var showingGame = false
     @State private var showSongPicker = false
+    @State private var showBPMConfig = false
+    @State private var estimatedBPM: Double = 120
+    @State private var gameDifficulty: GameDifficulty = .medium
     
     var body: some View {
         ZStack {
             Color(UIColor.systemGroupedBackground).ignoresSafeArea()
             
             if showingGame {
-                GameView(musicService: musicService, wsManager: wsManager)
+                GameView(musicService: musicService, wsManager: wsManager, bpm: estimatedBPM, difficulty: gameDifficulty)
             } else {
                 VStack(spacing: 30) {
                     // Header
@@ -89,7 +92,7 @@ struct ContentView: View {
                     .padding(.horizontal)
                     
                     if wsManager.clientConnected && musicService.currentSong != nil {
-                        Button(action: { startGame() }) {
+                        Button(action: { showBPMConfig = true }) {
                             Text("START GAME")
                                 .font(.title3)
                                 .fontWeight(.bold)
@@ -116,13 +119,31 @@ struct ContentView: View {
             SongPickerView(selectedSong: $musicService.currentSong)
                 .environmentObject(musicService)
         }
+        .sheet(isPresented: $showBPMConfig) {
+            BPMConfigView(
+                bpm: $estimatedBPM,
+                difficulty: $gameDifficulty,
+                song: musicService.currentSong,
+                onConfirm: { startGame() }
+            )
+        }
         .onAppear {
             wsManager.start()
         }
-        .onChange(of: wsManager.shouldStartGame) { shouldStart in
-            if shouldStart {
+        .onChange(of: wsManager.shouldStartGame) { oldValue, newValue in
+            if newValue {
                 startGame(isRemoteDebug: true)
                 wsManager.shouldStartGame = false
+            }
+        }
+        .onChange(of: wsManager.shouldEndGame) { oldValue, newValue in
+            if newValue && showingGame {
+                // End game triggered from web display
+                withAnimation {
+                    showingGame = false
+                }
+                musicService.stop()
+                wsManager.shouldEndGame = false
             }
         }
     }

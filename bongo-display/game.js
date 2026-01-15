@@ -6,6 +6,7 @@ class BongoGame {
             songTitle: '',
             bpm: 0,
             beatMap: [],
+            songDuration: 0, // Total song duration for progress bar
             score: 0,
             combo: 0,
             startTime: 0, // When the song actually started (Date.now())
@@ -32,6 +33,8 @@ class BongoGame {
             wsUrl: document.getElementById('ws-url'),
             connectBtn: document.getElementById('connect-btn'),
             debugBtn: document.getElementById('debug-btn'),
+            endGameBtn: document.getElementById('end-game-btn'),
+            progressBar: document.getElementById('progress-bar'),
             score: document.getElementById('score-value'),
             combo: document.getElementById('combo-value'),
             songTitle: document.getElementById('song-title'),
@@ -51,6 +54,7 @@ class BongoGame {
         this.elements.connectBtn.addEventListener('click', () => this.connect());
         this.elements.debugBtn.addEventListener('click', () => this.startDebugMode());
         this.elements.restartBtn.addEventListener('click', () => this.resetGame());
+        this.elements.endGameBtn.addEventListener('click', () => this.requestEndGame());
 
         window.addEventListener('resize', () => this.calculateLayout());
         this.calculateLayout();
@@ -113,7 +117,7 @@ class BongoGame {
                 this.gameState.lastSyncTime = performance.now();
                 break;
             case 'tap':
-                this.triggerFeedback(msg.side, msg.result || 'hit'); // 'hit' is internal falback
+                this.processRemoteTap(msg.side, msg.playbackTime);
                 break;
             case 'gameEnd':
                 this.endGame(msg.finalScore);
@@ -124,6 +128,7 @@ class BongoGame {
     startDebugMode() {
         // Create a fake beat map
         const beatMap = [];
+        const songDuration = 45; // 45 second debug song
         for (let i = 0; i < 50; i++) {
             beatMap.push({
                 time: 2.0 + (i * 0.8), // Start at 2s, every 0.8s
@@ -135,7 +140,8 @@ class BongoGame {
             type: 'gameStart',
             songTitle: 'Debug Beat - 120 BPM',
             bpm: 120,
-            beatMap: beatMap
+            beatMap: beatMap,
+            songDuration: songDuration
         };
 
         // Notify phone to switch to Game View
@@ -160,6 +166,7 @@ class BongoGame {
         this.gameState.songTitle = data.songTitle;
         this.gameState.bpm = data.bpm;
         this.gameState.beatMap = data.beatMap;
+        this.gameState.songDuration = data.songDuration || 0;
         this.gameState.score = 0;
         this.gameState.combo = 0;
         this.gameState.localStartTime = performance.now();
@@ -175,6 +182,7 @@ class BongoGame {
         this.elements.songTitle.textContent = this.gameState.songTitle;
         this.updateScore(0);
         this.updateCombo(0);
+        this.updateProgressBar(0);
 
         this.switchScreen('game');
 
@@ -190,6 +198,18 @@ class BongoGame {
         // Last Sync Time + (Time since Last Sync)
         const timeSinceSync = (now - this.gameState.lastSyncTime) / 1000;
         const currentPlaybackTime = this.gameState.serverPlaybackTime + timeSinceSync;
+
+        // Update progress bar
+        if (this.gameState.songDuration > 0) {
+            const progress = Math.min(100, (currentPlaybackTime / this.gameState.songDuration) * 100);
+            this.updateProgressBar(progress);
+
+            // Auto-end when song finishes
+            if (currentPlaybackTime >= this.gameState.songDuration) {
+                this.endGame();
+                return;
+            }
+        }
 
         // 1. Spawn new notes
         while (this.nextNoteIndex < this.gameState.beatMap.length) {
@@ -315,6 +335,50 @@ class BongoGame {
         }
     }
 
+    // Process tap from iOS controller - finds and removes hit note
+    processRemoteTap(side, playbackTime) {
+        // Show bongo animation immediately
+        this.triggerBongoAnim(side);
+
+        // Find closest note within hit window
+        let hitIndex = -1;
+        let minDiff = Infinity;
+        const HIT_WINDOW = 0.2; // 200ms window
+
+        for (let i = 0; i < this.visibleNotes.length; i++) {
+            const note = this.visibleNotes[i];
+            if (note.data.side !== side) continue;
+
+            const diff = Math.abs(playbackTime - note.data.time);
+            if (diff < HIT_WINDOW && diff < minDiff) {
+                minDiff = diff;
+                hitIndex = i;
+            }
+        }
+
+        if (hitIndex !== -1) {
+            // HIT! Remove note and score
+            const note = this.visibleNotes[hitIndex];
+            note.el.remove();
+            this.visibleNotes.splice(hitIndex, 1);
+
+            // Determine rating based on timing accuracy
+            let rating = 'ok';
+            let score = 50;
+            if (minDiff < 0.05) {
+                rating = 'perfect';
+                score = 100;
+            } else if (minDiff < 0.1) {
+                rating = 'good';
+                score = 75;
+            }
+
+            this.triggerFeedback(side, rating);
+            this.addScore(score);
+        }
+        // If no note found, ignore - no penalty for mistimed taps
+    }
+
     triggerBongoAnim(side) {
         const lane = this.elements.lanes[side];
         lane.classList.remove('active');
@@ -364,6 +428,21 @@ class BongoGame {
         this.elements.combo.textContent = val;
     }
 
+    updateProgressBar(percent) {
+        if (this.elements.progressBar) {
+            this.elements.progressBar.style.width = `${percent}%`;
+        }
+    }
+
+    // Request game end from web display - sends message to iOS
+    requestEndGame() {
+        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+            this.socket.send(JSON.stringify({ type: 'endGameRequest' }));
+        }
+        // Also end locally in case iOS doesn't respond
+        this.endGame();
+    }
+
     endGame(finalScore) {
         this.isPlaying = false;
         if (finalScore !== undefined) {
@@ -374,9 +453,42 @@ class BongoGame {
     }
 
     resetGame() {
+        // Clear game state
+        this.isPlaying = false;
         this.visibleNotes = [];
         this.elements.notesContainer.innerHTML = '';
+        this.gameState = {
+            songTitle: '',
+            bpm: 0,
+            beatMap: [],
+            songDuration: 0,
+            score: 0,
+            combo: 0,
+            startTime: 0,
+            serverPlaybackTime: 0,
+            lastSyncTime: 0,
+        };
+        this.nextNoteIndex = 0;
+
+        // Clear debug interval if running
+        if (this.debugInterval) {
+            clearInterval(this.debugInterval);
+            this.debugInterval = null;
+        }
+
+        // Reset UI
+        this.updateScore(0);
+        this.updateCombo(0);
+        this.updateProgressBar(0);
+
+        // Show connection screen
         this.switchScreen('connection');
+
+        // Update connection status if socket is still open
+        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+            this.elements.status.textContent = 'Connected! Waiting for game to start...';
+            this.elements.status.style.color = '#34d399';
+        }
     }
 
     switchScreen(screenName) {

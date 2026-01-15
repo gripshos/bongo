@@ -123,6 +123,40 @@ button:active {
     justify-content: space-between;
     align-items: flex-start;
     z-index: 20;
+    position: relative;
+}
+
+/* End Game Button */
+.end-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(239, 68, 68, 0.8);
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    z-index: 100;
+}
+
+.end-btn:hover {
+    background: rgba(239, 68, 68, 1);
+}
+
+/* Progress Bar */
+#progress-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 25;
+}
+
+#progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to right, var(--left-color), var(--accent-color), var(--right-color));
+    transition: width 0.1s linear;
 }
 
 .score-box {
@@ -282,6 +316,7 @@ button:active {
 
 .perfect { color: #fbbf24; text-shadow: 0 0 10px #fbbf24; }
 .good { color: #34d399; text-shadow: 0 0 10px #34d399; }
+.ok { color: #f8fafc; text-shadow: 0 0 8px #f8fafc; }
 .miss { color: #94a3b8; }
 
 @keyframes popUp {
